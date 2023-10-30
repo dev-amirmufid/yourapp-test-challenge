@@ -38,8 +38,6 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
     // catch options from decorator
     const { tableName, column }: IsUniqeInterface = args.constraints[0];
 
-    console.log;
-
     // database query check data is exists
     const dataExist = await this.entityManager
       .getMongoRepository(tableName)

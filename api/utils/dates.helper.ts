@@ -24,3 +24,7 @@ export const getHoroscope = (date: string): string => {
 
   return HOROSCOPE[sign];
 };
+
+export const getAge = (date: string): number => {
+  return moment().diff(moment(date), 'y');
+};

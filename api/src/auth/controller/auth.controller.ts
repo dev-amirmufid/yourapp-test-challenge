@@ -22,7 +22,6 @@ export class AuthController {
       const login = await this.authService.login(loginDto);
       return response.status(HttpStatus.OK).json(login);
     } catch (err) {
-      console.log(err);
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: User not created!',

@@ -1,4 +1,4 @@
-import { getHoroscope, getZodiac } from '@Utils/zodiac.calculator';
+import { getAge, getHoroscope, getZodiac } from '@Utils/dates.helper';
 import {
   Controller,
   Get,
@@ -41,15 +41,17 @@ export class UsersController {
   async getProfile(@Res() response, @Req() request) {
     const user = request.user;
     try {
-      const existingUser = await this.usersService.getUser(user.sub);
+      const userData = await this.usersService.getUser(user.sub);
+
+      const age = getAge(userData.birthday);
 
       return response.status(HttpStatus.OK).json({
-        zodiac: getZodiac(existingUser.birthday),
-        hosorsope: getHoroscope(existingUser.birthday),
-        ...existingUser,
+        zodiac: getZodiac(userData.birthday),
+        hosorsope: getHoroscope(userData.birthday),
+        age: age,
+        ...userData,
       });
     } catch (err) {
-      console.log(err);
       return response.status(err.status).json(err.response);
     }
   }
@@ -100,7 +102,6 @@ export class UsersController {
       );
       return response.status(HttpStatus.OK).json(existingUser);
     } catch (err) {
-      console.log(err);
       return response.status(err.status).json(err.response);
     }
   }

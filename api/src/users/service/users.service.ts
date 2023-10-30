@@ -40,7 +40,6 @@ export class UsersService {
       ...createUserDto,
       accountId,
     };
-    console.log(insertData);
     const newUser = await this.usersRepository.save(insertData);
     return newUser;
   }

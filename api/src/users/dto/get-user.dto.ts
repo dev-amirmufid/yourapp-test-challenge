@@ -19,11 +19,29 @@ export class GetUserDto {
   })
   birthday: string;
 
+  @ApiProperty({
+    example: 20,
+    description: 'Age',
+  })
+  age: number;
+
   @ApiProperty({ example: 165, description: 'height' })
   height: number;
 
   @ApiProperty({ example: 46, description: 'weight' })
   weight: number;
+
+  @ApiProperty({
+    example: 'Leo',
+    description: 'Horoscope',
+  })
+  horoscope: string;
+
+  @ApiProperty({
+    example: 'Rat',
+    description: 'Zodiac',
+  })
+  zodiac: string;
 
   @ApiProperty({
     example: ['Music', 'Basket'],
