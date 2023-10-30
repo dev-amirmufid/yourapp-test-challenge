@@ -5,8 +5,9 @@ import {
   Put,
   Body,
   Res,
-  Param,
   HttpStatus,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 
 import {
@@ -20,9 +21,11 @@ import { UsersService } from '../service/users.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { GetUserDto } from '../dto/get-user.dto';
+import { AuthGuard } from '@/auth/auth.guard';
 
 @ApiBearerAuth()
 @ApiTags('Users')
+@UseGuards(AuthGuard)
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -34,9 +37,10 @@ export class UsersController {
     description: 'Profile has been found',
     type: GetUserDto,
   })
-  async getProfile(@Res() response) {
+  async getProfile(@Res() response, @Req() request) {
+    const user = request.user;
     try {
-      const existingUser = await this.usersService.getAllUsers();
+      const existingUser = await this.usersService.getUser(user.sub);
       return response.status(HttpStatus.OK).json(existingUser);
     } catch (err) {
       return response.status(err.status).json(err.response);
@@ -49,15 +53,19 @@ export class UsersController {
     status: HttpStatus.CREATED,
     description: 'Profile has been create',
   })
-  async createProfile(@Res() response, @Body() createUserDto: CreateUserDto) {
+  async createProfile(
+    @Res() response,
+    @Req() request,
+    @Body() createUserDto: CreateUserDto,
+  ) {
+    const user = request.user;
     try {
-      const newUser = await this.usersService.createUser(createUserDto);
-      return response.status(HttpStatus.CREATED).json({
-        message: 'User has been created successfully',
-        newUser,
-      });
+      const newUser = await this.usersService.createUser(
+        user.sub,
+        createUserDto,
+      );
+      return response.status(HttpStatus.CREATED).json(newUser);
     } catch (err) {
-      console.log(err);
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: User not created!',
@@ -74,19 +82,18 @@ export class UsersController {
   })
   async updateProfile(
     @Res() response,
-    @Param('id') id: string,
+    @Req() request,
     @Body() updateUserDto: UpdateUserDto,
   ) {
+    const user = request.user;
     try {
       const existingUser = await this.usersService.updateUser(
-        id,
+        user.sub,
         updateUserDto,
       );
-      return response.status(HttpStatus.OK).json({
-        message: 'User has been successfully updated',
-        existingUser,
-      });
+      return response.status(HttpStatus.OK).json(existingUser);
     } catch (err) {
+      console.log(err);
       return response.status(err.status).json(err.response);
     }
   }

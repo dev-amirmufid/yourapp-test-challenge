@@ -7,14 +7,19 @@ import { AuthController } from './auth/controller/auth.controller';
 import { AuthService } from './auth/service/auth.service';
 import { Auth } from './auth/entity/auth.entity';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
     TypeOrmModule.forFeature([Users, Auth]),
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1h' },
     }),
   ],
   controllers: [UsersController, AuthController],

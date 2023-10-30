@@ -9,7 +9,7 @@ import {
 import { EntityManager } from 'typeorm';
 
 export type IsUniqeInterface = {
-  tableName: string;
+  tableName: any;
   column: string;
 };
 
@@ -38,14 +38,13 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
     // catch options from decorator
     const { tableName, column }: IsUniqeInterface = args.constraints[0];
 
+    console.log;
+
     // database query check data is exists
     const dataExist = await this.entityManager
-      .getRepository(tableName)
-      .createQueryBuilder(tableName)
-      .where({ [column]: value })
-      .getExists();
-
-    return !dataExist;
+      .getMongoRepository(tableName)
+      .countBy({ [column]: value });
+    return dataExist == 0;
   }
 
   defaultMessage(validationArguments?: ValidationArguments): string {

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { RouterModule } from '@nestjs/core';
 import { ApiModule } from './api.module';
-import { IsUniqueConstraint } from '@Utils/uniqueValidator';
+import { IsUniqueConstraint } from '@Utils/unique.validator';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { join } from 'path';

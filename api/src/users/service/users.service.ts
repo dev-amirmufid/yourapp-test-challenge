@@ -23,25 +23,36 @@ export class UsersService {
   }
 
   /* Get By Id*/
-  async getUser(id: any): Promise<Users> {
-    const existingUser = await this.usersRepository.findOne(id);
+  async getUser(accountId: string): Promise<Users> {
+    const existingUser = await this.usersRepository.findOneBy({ accountId });
     if (!existingUser) {
-      throw new NotFoundException(`User #${id} not found`);
+      throw new NotFoundException(`User #${accountId} not found`);
     }
     return existingUser;
   }
 
   /* Create */
-  async createUser(createUserDto: CreateUserDto): Promise<Users> {
-    const newUser = await this.usersRepository.save(createUserDto);
+  async createUser(
+    accountId: string,
+    createUserDto: CreateUserDto,
+  ): Promise<Users> {
+    const insertData = {
+      ...createUserDto,
+      accountId,
+    };
+    console.log(insertData);
+    const newUser = await this.usersRepository.save(insertData);
     return newUser;
   }
 
   /* Update */
-  async updateUser(id: any, updateUserDto: UpdateUserDto): Promise<Users> {
+  async updateUser(
+    accountId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<Users> {
     const updateUser: any = await this.usersRepository.findOneAndUpdate(
-      { _id: new ObjectId(id) },
-      updateUserDto,
+      { accountId },
+      { $set: updateUserDto },
     );
 
     return updateUser;

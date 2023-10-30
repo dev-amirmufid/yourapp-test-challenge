@@ -17,9 +17,10 @@ export class AuthService {
 
   /* Get By Id*/
   async login(loginDto: LoginDto): Promise<object> {
-    const account = await this.AuthRepository.findOne({
-      where: [{ username: loginDto.username }, { email: loginDto.username }],
+    const account = await this.AuthRepository.findOneBy({
+      $or: [{ username: loginDto.username }, { email: loginDto.username }],
     });
+
     if (!account) {
       throw new UnauthorizedException(`Wrong username or password`);
     }
