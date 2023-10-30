@@ -19,7 +19,8 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@/*": ["src/*"],
-      "@Utils/*": ["utils/*"]
+      "@Utils/*": ["utils/*"],
+      "@Constans/*": ["constans/*"]
     }
   }
 }

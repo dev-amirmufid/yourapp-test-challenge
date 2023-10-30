@@ -1,3 +1,4 @@
+import { getHoroscope, getZodiac } from '@Utils/zodiac.calculator';
 import {
   Controller,
   Get,
@@ -41,8 +42,14 @@ export class UsersController {
     const user = request.user;
     try {
       const existingUser = await this.usersService.getUser(user.sub);
-      return response.status(HttpStatus.OK).json(existingUser);
+
+      return response.status(HttpStatus.OK).json({
+        zodiac: getZodiac(existingUser.birthday),
+        hosorsope: getHoroscope(existingUser.birthday),
+        ...existingUser,
+      });
     } catch (err) {
+      console.log(err);
       return response.status(err.status).json(err.response);
     }
   }
